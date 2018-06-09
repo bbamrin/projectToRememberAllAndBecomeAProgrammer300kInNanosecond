@@ -9,14 +9,19 @@
     >
 
     <TextView
-        android:id="@+id/contact_name"
+        android:id="@+id/newsTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         />
 
+    <ImageView
+        android:id="@+id/newsPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
     <Button
-        android:id="@+id/message_button"
+
+        android:id="@+id/newsButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
