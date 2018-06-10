@@ -9,27 +9,49 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.newsTemplate;
+import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.ChannelTemplate;
+import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.Constants;
+import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.NewsTemplate;
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.R;
 
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>  {
 
-    private ArrayList<newsTemplate> listOfNews;
+    private ArrayList<NewsTemplate> listOfNews;
+    private ArrayList<ChannelTemplate> listOfChannels;
+    private String whatIsHappening  = Constants.NOTHING;
+    private String mchannel = Constants.NOTHING;
+    public RecyclerViewAdapter(String what, ArrayList<ChannelTemplate> list){
+        whatIsHappening = what;
+        listOfChannels = list;
+    }
+
+
+    public RecyclerViewAdapter(String what, ArrayList<NewsTemplate> list,String channel){
+        listOfNews = list;
+        mchannel = channel;
+        whatIsHappening = what;
+    }
+
 
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView textView;
-        Button button;
 
 
         public  ViewHolder(View itemView){
             super(itemView);
-            imageView = (ImageView)itemView.findViewById(R.id.newsPicture);
-            textView = (TextView)itemView.findViewById(R.id.newsTextView);
-            button = (Button)itemView.findViewById(R.id.newsButton);
+            if(whatIsHappening == Constants.CHANNELS){
+                textView = (TextView)itemView.findViewById(R.id.channelTextView);
+
+            } else if(whatIsHappening == Constants.NEWS){
+                imageView = (ImageView)itemView.findViewById(R.id.newsPicture);
+                textView = (TextView)itemView.findViewById(R.id.newsTextView);
+
+            }
+
         }
 
     }
@@ -38,9 +60,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        System.out.println("ya tut");
         Context ctx = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(ctx);
-        View view = inflater.inflate(R.layout.news_item,parent,false);
+        View view = inflater.inflate(R.layout.stub,parent,false);
+        if (whatIsHappening == Constants.NEWS){
+            view = inflater.inflate(R.layout.news_item,parent,false);
+        } else if(whatIsHappening == Constants.CHANNELS){
+            view = inflater.inflate(R.layout.channel_item,parent,false);
+        }
+
         return  new ViewHolder(view);
 
     }
@@ -48,14 +77,33 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position){
-        newsTemplate news = listOfNews.get(position);
-        TextView tv = viewHolder.textView;
-        tv.setText(news.getNewsEntry());
-        Button btn = viewHolder.button;
-        btn.setText("read full article");
-        //нужно добавить обработку картинки в новаости (newsPictureAdress)
+        System.out.println("ya tut");
+        if(whatIsHappening == Constants.NEWS){
+            NewsTemplate news = listOfNews.get(position);
+            TextView tv = viewHolder.textView;
+            tv.setText(news.getNewsEntry());
+
+            //нужно добавить обработку картинки в новости (newsPictureAdress)
+        } else if (whatIsHappening == Constants.CHANNELS){
+            ChannelTemplate channel = listOfChannels.get(position);
+            TextView tv = viewHolder.textView;
+            tv.setText(channel.getChannelName());
+            System.out.println("ya tut");
+        }
 
 
+
+    }
+
+
+    @Override
+    public int getItemCount(){
+        if (whatIsHappening == Constants.CHANNELS){
+            return listOfChannels.size();
+        } else if(whatIsHappening == Constants.NEWS){
+            return listOfNews.size();
+        }
+        return 1;
     }
 
 }

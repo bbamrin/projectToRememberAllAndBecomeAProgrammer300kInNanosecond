@@ -15,6 +15,7 @@ public final  class ContractClass {
         public static final String TABLE_NAME = "NewsTable";
         public static final String NEWS_PICTURE = "NewsId";
         public static final String NEWS_ENTRY = "NewsEntry";
+        public static final String NEWS_CHANNEL = "NewsChannel";
 
     }
 
@@ -22,7 +23,8 @@ public final  class ContractClass {
             "CREATE TABLE " + NewsDataBase.TABLE_NAME + " (" +
             NewsDataBase._ID + " INTEGER PRIMARY KEY," +
             NewsDataBase.NEWS_ENTRY + " TEXT," +
-            NewsDataBase.NEWS_PICTURE + " TEXT)";
+            NewsDataBase.NEWS_PICTURE + " TEXT, " +
+            NewsDataBase.NEWS_CHANNEL + " TEXT)";
 
     public static final String SQL_DELETE_ENTRIES =
             "DROP TABLE IF EXISTS " + NewsDataBase.TABLE_NAME;

@@ -1,6 +1,6 @@
 package com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model;
 
-public class newsTemplate {
+public class NewsTemplate {
     private String newsID;
     private String newsPictureAdress;
     private String newsEntry;
