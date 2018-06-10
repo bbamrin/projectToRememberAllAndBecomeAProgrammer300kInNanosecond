@@ -1,7 +1,8 @@
 package com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model;
 
-public  final class Constants {
+public  final class ConstantsAndStaticVars {
     public static final String NEWS = "news";
+    public static boolean IS_IN_ACTION_MODE = false;
     public static final String CHANNELS = "channels";
     public static final String NOTHING = "nothing123x";
     public static final String READ_FULL = "Read full article";
