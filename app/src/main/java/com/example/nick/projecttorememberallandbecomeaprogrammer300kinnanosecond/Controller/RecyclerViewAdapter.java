@@ -22,6 +22,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<ChannelTemplate> listOfChannels;
     private String whatIsHappening  = Constants.NOTHING;
     private String mchannel = Constants.NOTHING;
+    OnItemClickListener listener;
+    public interface OnItemClickListener{
+        void onItemClick(View itemView,int position );
+    }
+
+    public void setOnClickListener(OnItemClickListener listener){
+        this.listener = listener;
+    }
     public RecyclerViewAdapter(String what, ArrayList<ChannelTemplate> list){
         whatIsHappening = what;
         listOfChannels = list;
@@ -36,12 +44,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
 
+
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView textView;
 
 
-        public  ViewHolder(View itemView){
+        public  ViewHolder(final View itemView){
             super(itemView);
             if(whatIsHappening == Constants.CHANNELS){
                 textView = (TextView)itemView.findViewById(R.id.channelTextView);
@@ -51,8 +61,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 textView = (TextView)itemView.findViewById(R.id.newsTextView);
 
             }
+            itemView.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    if(listener !=null){
+                        int position = getAdapterPosition();
+                        if(position!= RecyclerView.NO_POSITION){
+                            listener.onItemClick(itemView,position);
+                        }
+                    }
+                }
+            });
 
         }
+
+
 
     }
 
