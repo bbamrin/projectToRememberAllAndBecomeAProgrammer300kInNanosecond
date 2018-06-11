@@ -1,3 +1,4 @@
 <resources>
+    <string name="selected_items">1 items selected</string>
     <string name="app_name">projectToRememberAllAndBecomeAProgrammer300kInNanosecond</string>
 </resources>

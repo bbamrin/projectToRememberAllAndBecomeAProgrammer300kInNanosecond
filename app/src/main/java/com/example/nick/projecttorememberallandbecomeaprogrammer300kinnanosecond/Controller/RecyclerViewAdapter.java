@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.ChannelTemplate;
@@ -22,6 +23,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private SparseBooleanArray selectedItems;
     private ArrayList<NewsTemplate> listOfNews;
     private MainActivity mainActivity;
+    private Multiselector multiselector;
     private ArrayList<ChannelTemplate> listOfChannels;
     private String whatIsHappening  = ConstantsAndStaticVars.NOTHING;
     private String mchannel = ConstantsAndStaticVars.NOTHING;
@@ -33,55 +35,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void setOnClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
-    public RecyclerViewAdapter(String what, ArrayList<ChannelTemplate> list, MainActivity activity){
+    public RecyclerViewAdapter(String what, ArrayList<ChannelTemplate> list, MainActivity activity, Multiselector multiselector){
         whatIsHappening = what;
         listOfChannels = list;
+        this.multiselector = multiselector;
         this.mainActivity = activity;
         selectedItems = new SparseBooleanArray();
     }
 
 
-    public RecyclerViewAdapter(String what, ArrayList<NewsTemplate> list,String channel, MainActivity activity){
+    public RecyclerViewAdapter(String what, ArrayList<NewsTemplate> list,String channel, MainActivity activity,Multiselector multiselector){
         this.mainActivity = activity;
         listOfNews = list;
+        this.multiselector = multiselector;
         mchannel = channel;
         whatIsHappening = what;
         selectedItems = new SparseBooleanArray();
     }
 
-    public boolean isSelected(int position){
-        return getSelectedItems().contains(position);
-    }
-
-    public void toggleSelection(int position){
-        if(selectedItems.get(position,false)){
-            selectedItems.delete(position);
-        } else{
-            selectedItems.put(position,true);
-        }
-        notifyItemChanged(position);
-    }
-
-    public void clearSelection(){
-        List<Integer> selection = getSelectedItems();
-        selectedItems.clear();
-        for(Integer i:selection){
-            notifyItemChanged(i);
-        }
-    }
-
-    public int getSelectedItemCount() {
-        return selectedItems.size();
-    }
-
-
-    public List<Integer> getSelectedItems() {
-        List<Integer> items = new ArrayList<>(selectedItems.size());
-        for (int i = 0; i < selectedItems.size(); ++i) {
-            items.add(selectedItems.keyAt(i));
-        }
-        return items;
-    }
 
 
 
@@ -90,10 +61,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView imageView;
         TextView textView;
+        View view;
 
 
         public  ViewHolder(final View itemView){
             super(itemView);
+            view = itemView;
             itemView.setOnLongClickListener(mainActivity);
             if(whatIsHappening == ConstantsAndStaticVars.CHANNELS){
                 textView = (TextView)itemView.findViewById(R.id.channelTextView);
@@ -116,16 +89,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             });
 
         }
-
-
-
     }
 
 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-        System.out.println("ya tut");
+
         Context ctx = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View view = inflater.inflate(R.layout.stub,parent,false);
@@ -142,7 +112,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position){
-        System.out.println("ya tut");
+
         if(whatIsHappening == ConstantsAndStaticVars.NEWS){
             NewsTemplate news = listOfNews.get(position);
             TextView tv = viewHolder.textView;
@@ -153,7 +123,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             ChannelTemplate channel = listOfChannels.get(position);
             TextView tv = viewHolder.textView;
             tv.setText(channel.getChannelName());
-            System.out.println("ya tut");
+            viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
+
+
+
         }
 
 
