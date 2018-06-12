@@ -30,8 +30,59 @@ public class DatabaseController {
     }
 
     public void addNews(NewsTemplate newsTemplate){
-        //need to make realization of this method
+        ContentValues values = new ContentValues();
+        values.put(ContractClass.NewsDataBase.NEWS_CHANNEL,newsTemplate.getNewsChannel());
+        values.put(ContractClass.NewsDataBase.NEWS_ENTRY,newsTemplate.getNewsEntry());
+        values.put(ContractClass.NewsDataBase.NEWS_PICTURE,newsTemplate.getNewsPictureAdress());
+        long id = db.insert(ContractClass.NewsDataBase.TABLE_NAME,null,values);
+        newsTemplate.setNewsID(Long.toString(id));
 
+
+    }
+
+
+    public ArrayList<NewsTemplate> getNews(String channel){
+        ArrayList<NewsTemplate> news = new ArrayList<>();
+
+        String projection[] = {
+            ContractClass.NewsDataBase.NEWS_CHANNEL,
+                    ContractClass.NewsDataBase.NEWS_ENTRY,
+                    ContractClass.NewsDataBase.NEWS_PICTURE,
+                    ContractClass.NewsDataBase._ID
+        };
+        String selection = ContractClass.NewsDataBase.NEWS_CHANNEL + " = ?";
+        String[] selectionArgs = {channel};
+
+        Cursor cursor = db.query(
+                ContractClass.NewsDataBase.TABLE_NAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        while (cursor.moveToNext()){
+            long id = cursor.getLong(
+                    cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase._ID)
+            );
+            String entry = cursor.getString(
+                    cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase.NEWS_ENTRY)
+            );
+            String mChannel = cursor.getString(
+                    cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase.NEWS_CHANNEL)
+            );
+            String picture = cursor.getString(
+                    cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase.NEWS_PICTURE)
+            );
+            NewsTemplate mNews = new NewsTemplate(Long.toString(id), picture,entry,mChannel);
+            if (!mNews.getNewsEntry().equals(ConstantsAndStaticVars.NOT_A_NEWS)){
+                news.add(mNews);
+            }
+
+        }
+        return news;
     }
 
 
@@ -48,12 +99,15 @@ public class DatabaseController {
     }
 
     public void deleteNews(NewsTemplate news){
-
+        String selection = ContractClass.NewsDataBase._ID + " LIKE ?";
+        String[] selectionArgs = {news.getNewsID()};
+        int deletedRows = db.delete(ContractClass.NewsDataBase.TABLE_NAME,selection,selectionArgs);
     }
 
     public ArrayList<ChannelTemplate> getChannelsList(){
         String[] projection = {
-                ContractClass.NewsDataBase.NEWS_CHANNEL
+                ContractClass.NewsDataBase.NEWS_CHANNEL,
+                ContractClass.NewsDataBase.NEWS_ENTRY
         };
         Cursor cursor = db.query(
                 ContractClass.NewsDataBase.TABLE_NAME,
@@ -69,16 +123,16 @@ public class DatabaseController {
         while (cursor.moveToNext()){
             String channelName = cursor.getString(
                     cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase.NEWS_CHANNEL));
-
+            String news = cursor.getString(cursor.getColumnIndexOrThrow(ContractClass.NewsDataBase.NEWS_ENTRY));
             ChannelTemplate channel =  new ChannelTemplate(channelName, ConstantsAndStaticVars.PROCEED_TO_THIS_CHANNEL);
-            channels.add(channel);
+            if (news.equals(ConstantsAndStaticVars.NOT_A_NEWS) ){
+                channels.add(channel);
+            }
+
         }
         return channels;
 
     }
 
-    public ArrayList<NewsTemplate> getNews(String channel){
-        return null;
-    }
 
 }

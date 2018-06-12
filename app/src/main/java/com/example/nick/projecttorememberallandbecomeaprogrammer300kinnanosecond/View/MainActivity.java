@@ -1,5 +1,6 @@
 package com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.View;
 
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -69,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             @Override
             public void onItemClick(View itemView, int position) {
                 if(!ConstantsAndStaticVars.IS_IN_ACTION_MODE){
-                    String channel = channelsList.get(position).getChannelName();
-                    System.out.println(channel + " " + position);
+                    Intent intent = new Intent(MainActivity.this,NewsActivity.class);
+                    intent.putExtra(ConstantsAndStaticVars.WHAT_CHANNEL,channelsList.get(position).getChannelName());
+                    startActivity(intent);
                 } else{
                     if(!firsTime){
                         if (multiselector.getItemState(position) == ConstantsAndStaticVars.NOT_USED ||multiselector.getItemState(position) == ConstantsAndStaticVars.UNSELECTED ){
@@ -98,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         addChannelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDbController.addChannel(new ChannelTemplate("asgfdbjb","s"));
+                mDbController.addChannel(new ChannelTemplate("asgjb","s"));
                 changeChannelsList(channelsList,mDbController);
 
                 adapter.notifyDataSetChanged();
@@ -153,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             }
             channelsList.clear();
             changeChannelsList(channelsList,mDbController);
+            multiselector = new Multiselector(channelsList.size());
             clearActionMode();
         } else if (item.getItemId() == android.R.id.home){
             clearActionMode();

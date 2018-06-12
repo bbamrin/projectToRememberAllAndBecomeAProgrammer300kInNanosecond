@@ -15,6 +15,7 @@ import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Model.NewsTemplate;
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.R;
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.View.MainActivity;
+import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.View.NewsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private SparseBooleanArray selectedItems;
     private ArrayList<NewsTemplate> listOfNews;
     private MainActivity mainActivity;
+    private NewsActivity newsActivity;
     private Multiselector multiselector;
     private ArrayList<ChannelTemplate> listOfChannels;
     private String whatIsHappening  = ConstantsAndStaticVars.NOTHING;
@@ -53,6 +55,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         selectedItems = new SparseBooleanArray();
     }
 
+    public RecyclerViewAdapter(String what, ArrayList<ChannelTemplate> list, NewsActivity activity, Multiselector multiselector){
+        whatIsHappening = what;
+        listOfChannels = list;
+        this.multiselector = multiselector;
+        this.newsActivity = activity;
+        selectedItems = new SparseBooleanArray();
+    }
+
+
+    public RecyclerViewAdapter(String what, ArrayList<NewsTemplate> list,String channel, NewsActivity activity,Multiselector multiselector){
+        this.newsActivity = activity;
+        listOfNews = list;
+        this.multiselector = multiselector;
+        mchannel = channel;
+        whatIsHappening = what;
+        selectedItems = new SparseBooleanArray();
+    }
+
 
 
 
@@ -67,7 +87,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public  ViewHolder(final View itemView){
             super(itemView);
             view = itemView;
-            itemView.setOnLongClickListener(mainActivity);
+            if (mainActivity!=null){
+                itemView.setOnLongClickListener(mainActivity);
+            } else{
+                itemView.setOnLongClickListener(newsActivity);
+            }
+
             if(whatIsHappening == ConstantsAndStaticVars.CHANNELS){
                 textView = (TextView)itemView.findViewById(R.id.channelTextView);
 
@@ -117,6 +142,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             NewsTemplate news = listOfNews.get(position);
             TextView tv = viewHolder.textView;
             tv.setText(news.getNewsEntry());
+            viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
 
             //нужно добавить обработку картинки в новости (newsPictureAdress)
         } else if (whatIsHappening == ConstantsAndStaticVars.CHANNELS){
