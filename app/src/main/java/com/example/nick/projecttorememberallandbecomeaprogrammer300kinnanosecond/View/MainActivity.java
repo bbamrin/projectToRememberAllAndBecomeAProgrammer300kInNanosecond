@@ -24,6 +24,8 @@ import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener {
 
@@ -38,12 +40,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     RecyclerViewAdapter adapter;
     Multiselector multiselector;
     Button addChannelButton;
+    Set<View> selectedViews;
+
     ArrayList<ChannelTemplate> channelsList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        selectedViews = new HashSet<>();
         counterTextView = (TextView)findViewById(R.id.countetText);
         counterTextView.setVisibility(View.GONE);
         toolbar = (Toolbar)findViewById(R.id.newsToolBar);
@@ -69,7 +73,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         adapter.setOnClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
+                selectedViews.add(itemView);
                 if(!ConstantsAndStaticVars.IS_IN_ACTION_MODE){
+
                     Intent intent = new Intent(MainActivity.this,NewsActivity.class);
                     intent.putExtra(ConstantsAndStaticVars.WHAT_CHANNEL,channelsList.get(position).getChannelName());
                     startActivity(intent);
@@ -80,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                         } else{
                             itemView.setBackgroundColor(getResources().getColor(R.color.white));
                         }
-
                         multiselector.toggleItemSelection(position);
                         int count = multiselector.getSelectedItemsPositions().size();
 
@@ -126,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     public boolean onLongClick(View v) {
         toolbar.getMenu().clear();
+        selectedViews.add(v);
         toolbar.inflateMenu(R.menu.menu_action_mode);
         counterTextView.setVisibility(View.VISIBLE);
         ConstantsAndStaticVars.IS_IN_ACTION_MODE = true;
@@ -175,6 +181,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         actionBar.setDisplayHomeAsUpEnabled(false);
         firsTime = true;
         adapter.notifyDataSetChanged();
+        for(View i:selectedViews){
+            i.setBackgroundColor(getResources().getColor(R.color.white));
+        }
         addChannelButton.setEnabled(true);
     }
 

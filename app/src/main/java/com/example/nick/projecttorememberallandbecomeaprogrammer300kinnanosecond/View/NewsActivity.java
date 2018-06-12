@@ -23,6 +23,8 @@ import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond
 import com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.R;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class NewsActivity extends AppCompatActivity implements View.OnLongClickListener {
 
@@ -32,6 +34,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
     ActionBar actionBar;
     TextView counterTextView;
     RecyclerView rv;
+    int counter = 0;
     DatabaseHelper mDbHelper;
     SQLiteDatabase db;
     DatabaseController mDbController;
@@ -40,6 +43,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
     Button addNewsButton;
     ArrayList<NewsTemplate> newsList;
     String newsChannel;
+    Set<View> selectedViews;
 
 
     @Override
@@ -47,7 +51,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.news_activity);
         newsChannel = getIntent().getStringExtra(ConstantsAndStaticVars.WHAT_CHANNEL);
-
+        selectedViews = new HashSet<>();
         counterTextView = (TextView)findViewById(R.id.countetText);
         counterTextView.setVisibility(View.GONE);
         toolbar = (Toolbar)findViewById(R.id.newsToolBar);
@@ -69,6 +73,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
         adapter.setOnClickListener(new RecyclerViewAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View itemView, int position) {
+                selectedViews.add(itemView);
                 if(!ConstantsAndStaticVars.IS_IN_ACTION_MODE){
                    // Intent intent = new Intent(NewsActivity.this,NewsActivity.class);
                     //intent.putExtra("whatChannel", newsList.get(position).getChannelName());
@@ -100,8 +105,9 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
         addNewsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mDbController.addNews(new NewsTemplate("null","news about programming",newsChannel));
+                mDbController.addNews(new NewsTemplate("null","news about programming" + counter,newsChannel));
                 changeNewsList(newsList,mDbController);
+                ++counter;
                 adapter.notifyDataSetChanged();
                 multiselector = new Multiselector(newsList.size());
             }
@@ -124,6 +130,7 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public boolean onLongClick(View v) {
+        selectedViews.add(v);
         toolbar.getMenu().clear();
         toolbar.inflateMenu(R.menu.menu_action_mode);
         counterTextView.setVisibility(View.VISIBLE);
@@ -176,6 +183,9 @@ public class NewsActivity extends AppCompatActivity implements View.OnLongClickL
         actionBar.setDisplayHomeAsUpEnabled(false);
         firsTime = true;
         adapter.notifyDataSetChanged();
+        for (View v: selectedViews){
+            v.setBackgroundColor(getResources().getColor(R.color.white));
+        }
         addNewsButton.setEnabled(true);
     }
 

@@ -1,7 +1,9 @@
 package com.example.nick.projecttorememberallandbecomeaprogrammer300kinnanosecond.Controller;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -120,7 +122,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
-
+        Log.d("LOG_TAG","On create");
         Context ctx = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(ctx);
         View view = inflater.inflate(R.layout.stub,parent,false);
@@ -137,19 +139,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position){
-
+        Log.d("LOG_TAG","On bind");
+        if(ConstantsAndStaticVars.IS_IN_ACTION_MODE){
+            viewHolder.view.setBackgroundColor(multiselector.isItemSelected(position)? Color.CYAN:Color.WHITE);
+            //доделать эту жижу
+        }
         if(whatIsHappening == ConstantsAndStaticVars.NEWS){
             NewsTemplate news = listOfNews.get(position);
             TextView tv = viewHolder.textView;
             tv.setText(news.getNewsEntry());
-            viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
+
+            //viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
 
             //нужно добавить обработку картинки в новости (newsPictureAdress)
         } else if (whatIsHappening == ConstantsAndStaticVars.CHANNELS){
             ChannelTemplate channel = listOfChannels.get(position);
             TextView tv = viewHolder.textView;
             tv.setText(channel.getChannelName());
-            viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
+            //viewHolder.view.setBackgroundColor((viewHolder.view.getContext()).getResources().getColor(R.color.white));
 
 
 

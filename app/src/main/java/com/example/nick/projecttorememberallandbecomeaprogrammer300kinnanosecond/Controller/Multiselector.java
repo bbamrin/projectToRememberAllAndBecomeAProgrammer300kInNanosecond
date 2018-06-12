@@ -37,6 +37,10 @@ public class Multiselector {
         }
         return list;
     }
+
+    public boolean isItemSelected(int position){
+        return mSelectedItems.get(position) == ConstantsAndStaticVars.SELECTED ? true:false;
+    }
     public int getItemState(int position){
         return mSelectedItems.get(position);
     }
