@@ -9,6 +9,10 @@ import java.util.Map;
 public class Multiselector {
     private Map<Integer,Integer> mSelectedItems;
 
+    public Map<Integer,Integer> getSelectedItems(){
+        return mSelectedItems;
+    }
+
     public Multiselector(int sizeOfDataSet){
         mSelectedItems = new HashMap<>();
         for(int i = 0; i < sizeOfDataSet;++i){
@@ -44,5 +48,6 @@ public class Multiselector {
     public void unselectItem(int position){
         mSelectedItems.put(position,ConstantsAndStaticVars.NOT_USED);
     }
+
 
 }
